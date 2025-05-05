@@ -45,7 +45,7 @@ function addGamesToPage(games) {
                           <p>${games[i].description}</p>
                           <p>Backers: ${games[i].backers}</p>`;
 
-        // for Challenge 7, adding a modal click event listener
+        // for Challenge 7.5, adding a modal click event listener
         game.addEventListener("click", () => {
             showDetailedView(games[i]);
             console.log("Clicked! " + games[i].name);
@@ -170,7 +170,7 @@ descriptionContainer.appendChild(displayMessage);
 const firstGameContainer = document.getElementById("first-game");
 const secondGameContainer = document.getElementById("second-game");
 
-// needed to slice GAMES_JSON so that it's not modified - if GAMES_JSON changes, my Challenge 7 breaks
+// needed to slice GAMES_JSON so that it's not modified - if GAMES_JSON changes, my Challenge 7.5 breaks
 const sortedGames =  GAMES_JSON.slice().sort( (item1, item2) => {
     return item2.pledged - item1.pledged;
 });

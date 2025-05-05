@@ -37,6 +37,8 @@ GIF created with ...
 
 While making the app, I briefly became stuck on part 3. I hadn't done DOM manipulation in a while, so I really had to comb through the provided resources. Eventually, I realized I was passing the wrong variable to the addGamesToPage function, which allowed me to move on to the next challenge.
 
+The other major problem I ran into was implementing my extra feature. I tried doing all the DOM manipulation in one function, but was having trouble selecting specific games from the games container. Instead, I figured out that it was easier to make an event listener inside the original addGamesToPage. After this, there was one additional bug. Although the modal showed the correct game after a button was clicked, the initial game cards weren't showing the correct game in the modal display. I realized that this was because GAMES_JSON was getting sorted in Challenge 7, so I added .slice() before the sorting, so that GAMES_JSON isn't modified.
+
 ## License
 
     Copyright [2025] [Adeline Greene]
