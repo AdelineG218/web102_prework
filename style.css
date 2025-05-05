@@ -2,7 +2,8 @@
 
 body {
     font-family: 'Cabin';
-    background-color: #758190;
+    background-color: #81a2ca;
+    color: #081f3a;
 }
 
 #tentacles {
@@ -11,12 +12,13 @@ body {
 
 .header {
     display: flex;
-    background-color: lightblue;
+    background-color: #081f3a;
     padding: 1%;
     align-items: center;
     margin-left: -10px;
     margin-right: -10px;
     margin-top: -10px;
+    color: #d1d8e7;
 }
 
 .stats-container {
@@ -24,13 +26,13 @@ body {
     align-items: flex-start;
 }
 
-.stats-container:hover {
+.stats-card:hover {
     cursor: pointer;
-    box-shadow: 0 0 30px lightblue;
+    box-shadow: 0 0 30px #395c85;
 }
 
 .stats-card {
-    background-color: #a8b0bc;
+    background-color: #c6dcfc;
     border-radius: 7px;
     padding: 1%;
     margin: 1%;
@@ -61,11 +63,12 @@ body {
     width: 300px;
     text-align: center;
     border-radius: 7px;
+    color: #375f8d;
 }
 
 .game-card:hover {
     cursor: pointer;
-    box-shadow: 0 0 30px lightblue;
+    box-shadow: 0 0 30px #081f3a;
 }
 
 #button-container {
@@ -78,4 +81,36 @@ button {
     padding: 1%;
     margin: 1%;
     border-radius: 7px;
+    color: #d1d8e7;
+    background-color: #081f3a;
+}
+
+#modal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+    color: #081f3a;
+}
+
+#modal-container {
+    background-color: white;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 600px;
+    width: 90%;
+}
+
+#modal-close {
+    float: right;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 20px;
 }

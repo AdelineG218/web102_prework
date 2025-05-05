@@ -8,7 +8,7 @@
 import GAMES_DATA from './games.js';
 
 // create a list of objects to store the data about the games using JSON.parse
-const GAMES_JSON = JSON.parse(GAMES_DATA)
+const GAMES_JSON = JSON.parse(GAMES_DATA);
 
 // remove all child elements from a parent element in the DOM
 function deleteChildElements(parent) {
@@ -27,29 +27,38 @@ const gamesContainer = document.getElementById("games-container");
 
 // create a function that adds all data from the games array to the page
 function addGamesToPage(games) {
-
     // loop over each item in the data
-
-
+    for (let i = 0; i < games.length; i++) {
         // create a new div element, which will become the game card
-
+        const game = document.createElement("div");
 
         // add the class game-card to the list
-
+        game.classList.add("game-card");
 
         // set the inner HTML using a template literal to display some info 
         // about each game
         // TIP: if your images are not displaying, make sure there is space
         // between the end of the src attribute and the end of the tag ("/>")
+        console.log("game #" + i + ": " + games[i].name);
+        game.innerHTML = `<img src="${games[i].img}" class="game-img" alt="${games[i].name}" />
+                          <h3>${games[i].name}</h3> 
+                          <p>${games[i].description}</p>
+                          <p>Backers: ${games[i].backers}</p>`;
 
+        // for Challenge 7, adding a modal click event listener
+        game.addEventListener("click", () => {
+            showDetailedView(games[i]);
+            console.log("Clicked! " + games[i].name);
+        });
 
         // append the game to the games-container
-
+        gamesContainer.appendChild(game);
+    }
 }
 
 // call the function we just defined using the correct variable
 // later, we'll call this function using a different list of games
-
+addGamesToPage(GAMES_JSON);
 
 /*************************************************************************************
  * Challenge 4: Create the summary statistics at the top of the page displaying the
@@ -61,19 +70,25 @@ function addGamesToPage(games) {
 const contributionsCard = document.getElementById("num-contributions");
 
 // use reduce() to count the number of total contributions by summing the backers
-
+const totalContributions = GAMES_JSON.reduce((acc, g) => {
+    return acc + g.backers;
+}, 0);
 
 // set the inner HTML using a template literal and toLocaleString to get a number with commas
-
+contributionsCard.innerHTML = `${totalContributions.toLocaleString()}`;
 
 // grab the amount raised card, then use reduce() to find the total amount raised
 const raisedCard = document.getElementById("total-raised");
+const totalRaised = GAMES_JSON.reduce((acc, g) => {
+    return acc + g.pledged;
+}, 0);
 
 // set inner HTML using template literal
-
+raisedCard.innerHTML = `$${totalRaised.toLocaleString()}`;
 
 // grab number of games card and set its inner HTML
 const gamesCard = document.getElementById("num-games");
+gamesCard.innerHTML = `${GAMES_JSON.length.toLocaleString()}`;
 
 
 /*************************************************************************************
@@ -87,10 +102,12 @@ function filterUnfundedOnly() {
     deleteChildElements(gamesContainer);
 
     // use filter() to get a list of games that have not yet met their goal
-
+    let unfundedGames = GAMES_JSON.filter((g) => {
+        return g.pledged < g.goal;
+    });
 
     // use the function we previously created to add the unfunded games to the DOM
-
+    addGamesToPage(unfundedGames);
 }
 
 // show only games that are fully funded
@@ -98,10 +115,12 @@ function filterFundedOnly() {
     deleteChildElements(gamesContainer);
 
     // use filter() to get a list of games that have met or exceeded their goal
-
+    let fundedGames = GAMES_JSON.filter((g) => {
+        return g.pledged >= g.goal;
+    });
 
     // use the function we previously created to add unfunded games to the DOM
-
+    addGamesToPage(fundedGames);
 }
 
 // show all games
@@ -109,7 +128,7 @@ function showAllGames() {
     deleteChildElements(gamesContainer);
 
     // add all games from the JSON data to the DOM
-
+    addGamesToPage(GAMES_JSON);
 }
 
 // select each button in the "Our Games" section
@@ -118,7 +137,9 @@ const fundedBtn = document.getElementById("funded-btn");
 const allBtn = document.getElementById("all-btn");
 
 // add event listeners with the correct functions to each button
-
+unfundedBtn.addEventListener("click", filterUnfundedOnly);
+fundedBtn.addEventListener("click", filterFundedOnly);
+allBtn.addEventListener("click", showAllGames);
 
 /*************************************************************************************
  * Challenge 6: Add more information at the top of the page about the company.
@@ -129,12 +150,17 @@ const allBtn = document.getElementById("all-btn");
 const descriptionContainer = document.getElementById("description-container");
 
 // use filter or reduce to count the number of unfunded games
-
+let unfundedGames = GAMES_JSON.filter((g) => {
+    return g.pledged < g.goal;
+}).length;
 
 // create a string that explains the number of unfunded games using the ternary operator
-
+const displayString = `A total of $${totalRaised.toLocaleString()} has been raised for ${GAMES_JSON.length != 1 ? GAMES_JSON.length + " games" : "1 game"}. Currently, ${unfundedGames != 1 ? unfundedGames + " games" : "1 games"} remain unfunded. ${unfundedGames > 0 ? "We need your help to fund " + (unfundedGames == 1 ? "this amazing game" : "these amazing games") : "Thank you for helping to fund these games"}!`;
 
 // create a new DOM element containing the template string and append it to the description container
+const displayMessage = document.createElement("p");
+displayMessage.innerHTML = displayString;
+descriptionContainer.appendChild(displayMessage);
 
 /************************************************************************************
  * Challenge 7: Select & display the top 2 games
@@ -144,12 +170,56 @@ const descriptionContainer = document.getElementById("description-container");
 const firstGameContainer = document.getElementById("first-game");
 const secondGameContainer = document.getElementById("second-game");
 
-const sortedGames =  GAMES_JSON.sort( (item1, item2) => {
+// needed to slice GAMES_JSON so that it's not modified - if GAMES_JSON changes, my Challenge 7 breaks
+const sortedGames =  GAMES_JSON.slice().sort( (item1, item2) => {
     return item2.pledged - item1.pledged;
 });
 
 // use destructuring and the spread operator to grab the first and second games
-
+const [firstGame, secondGame, ...others] = sortedGames;
 // create a new element to hold the name of the top pledge game, then append it to the correct element
-
+const topGame = document.createElement("p");
+topGame.innerHTML = `${firstGame.name}`;
+firstGameContainer.appendChild(topGame);
 // do the same for the runner up item
+const runnerUpGame = document.createElement("p");
+runnerUpGame.innerHTML = `${secondGame.name}`;
+secondGameContainer.appendChild(runnerUpGame);
+
+/************************************************************************************
+ * Challenge 7.5: Implement a new feature - modal display for game cards when clicked
+ * Skills used: functions, ternary operator, template literals
+ */
+
+// grab the element with the id games-container
+const modalContainer = document.getElementById("modal-container");
+
+// create a function that adds all data from the games array to the page
+function showDetailedView(game) {
+    console.log("Code Run");
+    const modal = document.getElementById("modal");
+    const modalContainer = document.getElementById("modal-container");
+
+    // delete previous content except close button
+    modalContainer.innerHTML = '<span id="modal-close">&times;</span>';
+
+    const current = document.createElement("div");
+
+    // set the inner text of the game
+    current.innerHTML = `<img src="${game.img}" class="game-img" alt="${game.name}" />
+                    <h3>${game.name}</h3> 
+                    <p>${game.description}</p>
+                    <p>${game.backers} backers have pledged $${game.pledged.toLocaleString()} of the $${game.goal.toLocaleString()} goal.</p>
+                    <p><strong>${game.goal-game.pledged > 0 ? "More backers needed!" : "Fully funded!"}</strong></p>`;
+
+    console.log(current.innerHTML);
+    // append the game to the modal-container
+    modalContainer.appendChild(current);
+    modal.style.display = "block";
+
+    // event listener for the close button
+    document.getElementById("modal-close").onclick = () => {
+        console.log("Closed");
+        modal.style.display = "none";
+    };
+}
